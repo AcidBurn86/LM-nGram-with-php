@@ -1,4 +1,4 @@
-# LLM-with-php
+# LM-nGram-with-php
 This project is an easy and educational implementation of a language model in PHP, specifically based on a [Markov Chain](https://en.wikipedia.org/wiki/Markov_chain). In simple terms, a Markov Chain involves predicting the next step in a sequence based only on the current step, without taking into account the history of previous steps. In the case of a language model, this means predicting the next word based on the preceding words.
 
 This repository contains an educational implementation of a language model in PHP. The code demonstrates how to construct, train, and use an n-gram language model for text generation. 
