@@ -1,5 +1,5 @@
 # LLM-with-php
-An easy and educational implementation of a language model in PHP in a very basic and easy way.
+This project is an easy and educational implementation of a language model in PHP, specifically based on a [Markov Chain](https://en.wikipedia.org/wiki/Markov_chain). In simple terms, a Markov Chain involves predicting the next step in a sequence based only on the current step, without taking into account the history of previous steps. In the case of a language model, this means predicting the next word based on the preceding words.
 
 This repository contains an educational implementation of a language model in PHP. The code demonstrates how to construct, train, and use an n-gram language model for text generation. 
 
@@ -18,6 +18,24 @@ You can adjust the value of the **$ngrams** variable prior to running the model.
 This value determines the size of the word sequences (n-grams) the model uses for training and prediction, based on the preceding word. Please note that the number of possibilities grows exponentially with the value of n-grams, so caution is advised when setting this variable. 
 
 A value of 6 is usually sufficient, while a higher value, like 15, might cause the program to freeze.
+
+**Trained File Example**
+
+```[
+  "harry potter" => [
+    "was" => 0.24,
+    "is" => 0.18,
+    "and" => 0.12,
+    // other words and their probabilities
+  ],
+  "professor dumbledore" => [
+    "was" => 0.35,
+    "said" => 0.25,
+    // other words and their probabilities
+  ],
+  // other n-grams and their following words with probabilities
+]
+```
 
 **Examples of generated text:**
 
