@@ -8,7 +8,7 @@ It's a simple but good example for understanding the basics of Natural Language 
 The model is trained on a text file with the 7 books of Harry Potter, serialized for future use, and then used to generate new sentences based on the probabilities of word sequences in the training data.
 
 # How to use
-First extend memory_limit in your php.ini to 10gb aprox.
+First extend memory_limit in your php.ini to 10240M (10gb) aprox.
 and also max_execution_time to 300 seconds.
 
 In the first run if there is no "trained" file in the directory it will train the model, it could take some time, depending on your hardware.

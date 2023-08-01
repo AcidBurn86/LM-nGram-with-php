@@ -108,7 +108,7 @@ class LanguageModel {
     }
 }
 
-$ngrams = 7;
+$ngrams = 6;
 
 // Usage
 if (!file_exists('trained')) {
