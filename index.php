@@ -24,10 +24,10 @@ class LanguageModel {
         for ($n = $this->n; $n > 0; $n--) {
             $this->models[$n] = [];
 
-            foreach ($paragraphs as $paragraph) {
+            foreach ($paragraphs as $paragraph) { //split into words
                 $words = preg_split('/\s+|(?<=[.!?])|(?=[.!?])/u', $paragraph, -1, PREG_SPLIT_NO_EMPTY);
                 
-                $start = array_fill(0, $n - 1, '<start>');
+                $start = array_fill(0, $n - 1, '<start>'); //add start and end tokens
                 $end = array_fill(0, $n - 1, '<end>');
                 $words = array_merge($start, $words, $end);
                 
@@ -72,17 +72,7 @@ class LanguageModel {
         if (count($next_words) == 1) { //avoid exact phrases
             return null;
         }
-        arsort($next_words);
-        $top_words = array_slice($next_words, 0, 3, true); // random first 3 words
-    
-        $prob_diff = max($top_words) - min($top_words);
-    
-        if ($prob_diff < 0.05) {
-            $word_keys = array_keys($top_words);
-            $selected_word = $word_keys[array_rand($word_keys)];
-            
-            return $selected_word;
-        } else {
+
             $prob_sum = array_sum($next_words);
             $rand = mt_rand() / mt_getrandmax() * $prob_sum;
             $accum = 0;
@@ -92,7 +82,7 @@ class LanguageModel {
                     return $word;
                 }
             }
-        }
+        
     
         return null;
     }
@@ -118,20 +108,56 @@ class LanguageModel {
     }
 }
 
-$ngrams = 6;
+$ngrams = 7;
 
 // Usage
 if (!file_exists('trained')) {
+    // echo time in format hh:mm;ss
+    $started = date('H:i:s');
     echo "creating file 'trained'";
+    echo "started training at:" . date('H:i:s');
     echo "<br>";
     echo "<br>";
 
     $lm = new LanguageModel($ngrams);
     $lm->train('train-input.txt');
     $lm->saveModel('trained');
+
+    echo "finished training at:" . date('H:i:s');
+    // calculate time difference
+    $ended = date('H:i:s');
+    $diff = abs(strtotime($ended) - strtotime($started));
+    echo "<br>";
+    echo "<br>";
+    echo "time taken: " . gmdate('H:i:s', $diff);
+
+    echo "<br>";
+    echo "<br>";
 }
+$started = date('H:i:s');
 
 $lm = new LanguageModel($ngrams);
 $lm->loadModel('trained');
-echo $lm->generateSentence('voldemort', 120);
+
+$ended = date('H:i:s');
+$diff = abs(strtotime($ended) - strtotime($started));
+echo "<br>";
+echo "the model loaded in: " . gmdate('H:i:s', $diff) . "<br><br>";
+echo "---------------";
+
+
+
+echo "<br><br>";
+
+$words = ['voldemort', 'harry', 'hogwarts'];
+
+foreach ($words as $word) {
+    $started = date('H:i:s:u');
+    echo $lm->generateSentence($word, 50);
+    $ended = date('H:i:s:u');
+    $diff = abs(strtotime($ended) - strtotime($started));
+    echo "<br>";
+    echo "<small><i>time taken for '$word': " . gmdate('H:i:s:u', $diff) . "</i></small><br><br>";
+}
+exit;
 ?>
