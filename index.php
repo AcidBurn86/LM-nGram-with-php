@@ -25,7 +25,7 @@ class LanguageModel {
             $this->models[$n] = [];
 
             foreach ($paragraphs as $paragraph) { //split into words
-                $words = preg_split('/\s+|(?<=[.!?])|(?=[.!?])/u', $paragraph, -1, PREG_SPLIT_NO_EMPTY);
+                $words = preg_split('/\s+|(?<=[!?])|(?=[!?])/u', $paragraph, -1, PREG_SPLIT_NO_EMPTY);
                 
                 $start = array_fill(0, $n - 1, '<start>'); //add start and end tokens
                 $end = array_fill(0, $n - 1, '<end>');
@@ -75,10 +75,13 @@ class LanguageModel {
 
             $prob_sum = array_sum($next_words);
             $rand = mt_rand() / mt_getrandmax() * $prob_sum;
+            //echo $rand.'<br>';
             $accum = 0;
             foreach ($next_words as $word => $prob) {
                 $accum += $prob;
+                //echo "accu=".$accum." - prob=".$prob." - word=".$word.'<br>';
                 if ($accum >= $rand) {
+                    //echo "selected word=".$word.'<br>';
                     return $word;
                 }
             }
@@ -133,6 +136,9 @@ if (!file_exists('trained')) {
 
     echo "<br>";
     echo "<br>";
+
+    unset($lm);
+    gc_collect_cycles();
 }
 $started = date('H:i:s');
 
@@ -149,7 +155,7 @@ echo "---------------";
 
 echo "<br><br>";
 
-$words = ['voldemort', 'harry', 'hogwarts'];
+$words = ['yes', 'voldemort', 'harry', 'hogwarts'];
 
 foreach ($words as $word) {
     $started = date('H:i:s:u');
@@ -159,5 +165,7 @@ foreach ($words as $word) {
     echo "<br>";
     echo "<small><i>time taken for '$word': " . gmdate('H:i:s:u', $diff) . "</i></small><br><br>";
 }
+unset($lm);
+gc_collect_cycles();
 exit;
 ?>
