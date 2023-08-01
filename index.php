@@ -4,6 +4,9 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+$eol = (isset($_SERVER['SHELL'])) ? PHP_EOL : "<br />";
+
+
 class LanguageModel {
     private $models = [];
     private $n;
@@ -33,7 +36,7 @@ class LanguageModel {
                 
                 for ($i = 0; $i < count($words) - $n + 1; $i++) {
                     $slice = array_slice($words, $i, $n);
-                    $key = implode(' ', array_slice($slice, 0, $n - 1));
+                    $key = implode(' ', array_slice($slice, 0, $n - 1)); //
                     $word = $slice[$n - 1];
                     
                     if (!isset($this->models[$n][$key])) {
@@ -75,13 +78,13 @@ class LanguageModel {
 
             $prob_sum = array_sum($next_words);
             $rand = mt_rand() / mt_getrandmax() * $prob_sum;
-            //echo $rand.'<br>';
+            //echo $rand.$eol;
             $accum = 0;
             foreach ($next_words as $word => $prob) {
                 $accum += $prob;
-                //echo "accu=".$accum." - prob=".$prob." - word=".$word.'<br>';
+                //echo "accu=".$accum." - prob=".$prob." - word=".$word.$eol;
                 if ($accum >= $rand) {
-                    //echo "selected word=".$word.'<br>';
+                    //echo "selected word=".$word.$eol;
                     return $word;
                 }
             }
@@ -115,27 +118,26 @@ $ngrams = 6;
 
 // Usage
 if (!file_exists('trained')) {
-    // echo time in format hh:mm;ss
     $started = date('H:i:s');
-    echo "creating file 'trained'";
-    echo "started training at:" . date('H:i:s');
-    echo "<br>";
-    echo "<br>";
+    echo "creating file 'trained'" . $eol;
+    echo "started training at:" . date('H:i:s') . $eol;
+    echo $eol;
+    echo $eol;
 
     $lm = new LanguageModel($ngrams);
     $lm->train('train-input.txt');
     $lm->saveModel('trained');
 
-    echo "finished training at:" . date('H:i:s');
+    echo "finished training at:" . date('H:i:s') . $eol;
     // calculate time difference
     $ended = date('H:i:s');
     $diff = abs(strtotime($ended) - strtotime($started));
-    echo "<br>";
-    echo "<br>";
-    echo "time taken: " . gmdate('H:i:s', $diff);
+    echo $eol;
+    echo $eol;
+    echo "time taken: " . gmdate('H:i:s', $diff) . $eol;
 
-    echo "<br>";
-    echo "<br>";
+    echo $eol;
+    echo $eol;
 
     unset($lm);
     gc_collect_cycles();
@@ -147,23 +149,22 @@ $lm->loadModel('trained');
 
 $ended = date('H:i:s');
 $diff = abs(strtotime($ended) - strtotime($started));
-echo "<br>";
-echo "the model loaded in: " . gmdate('H:i:s', $diff) . "<br><br>";
-echo "---------------";
+echo $eol;
+echo "the model loaded in: " . gmdate('H:i:s', $diff) . $eol;
+echo "---------------". $eol;
 
 
 
-echo "<br><br>";
+echo $eol;
 
 $words = ['yes', 'voldemort', 'harry', 'hogwarts'];
 
 foreach ($words as $word) {
     $started = date('H:i:s:u');
-    echo $lm->generateSentence($word, 50);
+    echo $lm->generateSentence($word, 50). $eol;
     $ended = date('H:i:s:u');
     $diff = abs(strtotime($ended) - strtotime($started));
-    echo "<br>";
-    echo "<small><i>time taken for '$word': " . gmdate('H:i:s:u', $diff) . "</i></small><br><br>";
+    echo "". $eol;
 }
 unset($lm);
 gc_collect_cycles();
